@@ -6,6 +6,20 @@ function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
+function deepClone(source) {
+  if (!source && typeof source !== 'object') {
+    throw new Error('error arguments', 'deepClone')
+  }
+  const targetObj = source.constructor === Array ? [] : {}
+  Object.keys(source).forEach(keys => {
+    if (source[keys] && typeof source[keys] === 'object') {
+      targetObj[keys] = deepClone(source[keys])
+    } else {
+      targetObj[keys] = source[keys]
+    }
+  })
+  return targetObj
+}
 const name = pkg.name || 'vue-element-admin' // page title
 const port = 9527 // dev port
 
@@ -24,38 +38,12 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV === 'development' ? 'error' : false,
   productionSourceMap: false,
   devServer: {
+    host: 'localhost',
     port: port,
     open: true,
     overlay: {
       warnings: false,
       errors: true
-    },
-    proxy: {
-      // change xxx-api/login => mock/login
-      // detail: https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {
-        target: `http://localhost:${port}/mock`,
-        changeOrigin: true,
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
-        }
-      }
-    },
-    after(app) {
-      require('@babel/register')
-      const bodyParser = require('body-parser')
-
-      // parse app.body
-      // http://expressjs.com/en/4x/api.html#req.body
-      app.use(bodyParser.json())
-      app.use(bodyParser.urlencoded({
-        extended: true
-      }))
-
-      const { default: mocks } = require('./mock')
-      for (const mock of mocks) {
-        app[mock.type](mock.url, mock.response)
-      }
     }
   },
   configureWebpack: {
@@ -65,6 +53,153 @@ module.exports = {
     resolve: {
       alias: {
         '@': resolve('src')
+      }
+    },
+    devServer: {
+      before(app) {
+        // MOCK接口填写的地方，每次修改这个配置文件，都要重启项目
+        // 模板
+        // app.get('请求地址',(req,res)=>{
+        //   res.json({
+        //
+        //   })
+        // })
+        const constantRoutes = [
+          {
+            path: '/redirect',
+            component: 'layout/Layout',
+            hidden: true,
+            children: [
+              {
+                path: '/redirect/:path*',
+                component: 'views/redirect/index'
+              }
+            ]
+          },
+          {
+            path: '/login',
+            component: 'views/login/index',
+            hidden: true
+          },
+          {
+            path: '/auth-redirect',
+            component: 'views/login/authredirect',
+            hidden: true
+          },
+          {
+            path: '/404',
+            component: 'views/errorPage/404',
+            hidden: true
+          },
+          {
+            path: '/401',
+            component: 'views/errorPage/401',
+            hidden: true
+          },
+          {
+            path: '',
+            component: 'layout/Layout',
+            redirect: 'dashboard',
+            children: [
+              {
+                path: 'dashboard',
+                component: 'views/dashboard/index',
+                name: 'Dashboard',
+                meta: { title: 'dashboard', icon: 'dashboard', noCache: true, affix: true }
+              }
+            ]
+          }
+        ]
+        const asyncRoutes = [
+        ]
+        const routes = deepClone([...constantRoutes, ...asyncRoutes])
+
+        const roles = [
+          {
+            key: 'admin',
+            name: 'admin',
+            description: 'Super Administrator. Have access to view all pages.',
+            routes: routes
+          },
+          {
+            key: 'editor',
+            name: 'editor',
+            description: 'Normal Editor. Can see all pages except permission page',
+            routes: routes.filter(i => i.path !== '/permission')// just a mock
+          },
+          {
+            key: 'visitor',
+            name: 'visitor',
+            description: 'Just a visitor. Can only see the home page and the document page',
+            routes: [{
+              path: '',
+              redirect: 'dashboard',
+              children: [
+                {
+                  path: 'dashboard',
+                  name: 'Dashboard',
+                  meta: { title: 'dashboard', icon: 'dashboard' }
+                }
+              ]
+            }]
+          }
+        ]
+
+        const tokens = {
+          admin: {
+            token: 'admin-token'
+          },
+          editor: {
+            token: 'editor-token'
+          }
+        }
+
+        const users = {
+          'admin-token': {
+            roles: ['admin'],
+            introduction: 'I am a super administrator',
+            avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+            name: 'Super Admin'
+          },
+          'editor-token': {
+            roles: ['editor'],
+            introduction: 'I am an editor',
+            avatar: 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif',
+            name: 'Normal Editor'
+          }
+        }
+
+        app.post('/api/user/login', (req, res) => {
+          const token = tokens['admin']
+          if (!token) {
+            res.json({
+              code: 60204,
+              message: 'Account and password are incorrect.'
+            })
+          } else {
+            res.json({
+              code: 20000,
+              data: token
+            })
+          }
+        })
+
+        app.get('/api/user/info', (req, res) => {
+          const { token } = req.query
+          console.log(token)
+          const info = users[token]
+          if (!info) {
+            res.json({
+              code: 50008,
+              message: 'Login failed, unable to get user details.'
+            })
+          } else {
+            res.json({
+              code: 20000,
+              data: info
+            })
+          }
+        })
       }
     }
   },
