@@ -12,12 +12,13 @@
 
         <screenfull class="right-menu-item hover-effect" />
 
-        <el-tooltip :content="$t('navbar.size')" effect="dark" placement="bottom">
-          <size-select class="right-menu-item hover-effect" />
+        <el-tooltip :content="$t('navbar.lock')" effect="dark" placement="bottom">
+          <top-lock class="right-menu-item hover-effect" />
         </el-tooltip>
 
-        <lang-select class="right-menu-item hover-effect" />
-
+        <el-tooltip :content="$t('navbar.lang')" effect="dark" placement="bottom">
+          <lang-select class="right-menu-item hover-effect" />
+        </el-tooltip>
       </template>
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
@@ -51,9 +52,9 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
-import SizeSelect from '@/components/SizeSelect'
 import LangSelect from '@/components/LangSelect'
 import Search from '@/components/HeaderSearch'
+import TopLock from '@/components/TopLock'
 
 export default {
   components: {
@@ -61,9 +62,9 @@ export default {
     Hamburger,
     ErrorLog,
     Screenfull,
-    SizeSelect,
     LangSelect,
-    Search
+    Search,
+    TopLock
   },
   computed: {
     ...mapGetters([

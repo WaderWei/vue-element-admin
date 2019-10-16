@@ -44,6 +44,12 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/lock',
+    hidden: true,
+    name: '锁屏页',
+    component: () => import('@/views/lock')
+  },
+  {
     path: '',
     component: Layout,
     redirect: 'dashboard',

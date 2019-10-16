@@ -70,7 +70,8 @@ export default {
     dashboard: '首页',
     github: '项目地址',
     theme: '换肤',
-    size: '布局大小'
+    lock: '锁屏',
+    lang: '切换语言'
   },
   login: {
     title: '系统登录',

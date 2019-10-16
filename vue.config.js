@@ -200,6 +200,13 @@ module.exports = {
             })
           }
         })
+
+        app.post('/api/user/logout', (req, res) => {
+          res.json({
+            code: 20000,
+            data: 'success'
+          })
+        })
       }
     }
   },

@@ -1,13 +1,27 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
+import {
+  setStore,
+  getStore,
+  removeStore
+} from '@/utils/store'
 
 const state = {
   token: getToken(),
   name: '',
   avatar: '',
   introduction: '',
-  roles: []
+  roles: [],
+  isLock: getStore({
+    name: 'isLock'
+  }) || false,
+  lockPassword: getStore({
+    name: 'lockPassword'
+  }) || '',
+  browserHeaderTitle: getStore({
+    name: 'browserHeaderTitle'
+  }) || 'Admin'
 }
 
 const mutations = {
@@ -25,6 +39,35 @@ const mutations = {
   },
   SET_ROLES: (state, roles) => {
     state.roles = roles
+  },
+  SET_LOCK_PASSWORD: (state, lockPassword) => {
+    state.lockPassword = lockPassword
+    setStore({
+      name: 'lockPassword',
+      content: state.lockPassword,
+      type: 'session'
+    })
+  },
+  SET_LOCK: (state, action) => {
+    state.isLock = true
+    setStore({
+      name: 'isLock',
+      content: state.isLock,
+      type: 'session'
+    })
+  },
+  CLEAR_LOCK: (state, action) => {
+    state.isLock = false
+    state.lockPassword = ''
+    removeStore({
+      name: 'lockPassword'
+    })
+    removeStore({
+      name: 'isLock'
+    })
+  },
+  SET_BROWSERHEADERTITLE: (state, action) => {
+    state.browserHeaderTitle = action.browserHeaderTitle
   }
 }
 
@@ -78,6 +121,7 @@ const actions = {
       logout(state.token).then(() => {
         commit('SET_TOKEN', '')
         commit('SET_ROLES', [])
+        commit('CLEAR_LOCK')
         removeToken()
         resetRouter()
         resolve()
