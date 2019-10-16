@@ -21,7 +21,7 @@ function deepClone(source) {
   return targetObj
 }
 const name = pkg.name || 'vue-element-admin' // page title
-const port = 9527 // dev port
+const port = 9901 // dev port
 
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
@@ -186,7 +186,6 @@ module.exports = {
 
         app.get('/api/user/info', (req, res) => {
           const { token } = req.query
-          console.log(token)
           const info = users[token]
           if (!info) {
             res.json({
