@@ -38,7 +38,7 @@ module.exports = {
   lintOnSave: process.env.NODE_ENV === 'development' ? 'error' : false,
   productionSourceMap: false,
   devServer: {
-    host: 'localhost',
+    host: '192.168.0.120',
     port: port,
     open: true,
     overlay: {
@@ -106,6 +106,18 @@ module.exports = {
                 component: 'views/dashboard/index',
                 name: 'Dashboard',
                 meta: { title: 'dashboard', icon: 'dashboard', noCache: true, affix: true }
+              }
+            ]
+          },
+          {
+            path: '/documentation',
+            component: 'layout/Layout',
+            children: [
+              {
+                path: 'index',
+                component: () => import('@/views/documentation/index'),
+                name: 'Documentation',
+                meta: { title: 'documentation', icon: 'documentation', affix: true }
               }
             ]
           }

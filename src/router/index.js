@@ -61,6 +61,18 @@ export const constantRoutes = [
         meta: { title: 'dashboard', icon: 'dashboard', noCache: true, affix: true }
       }
     ]
+  },
+  {
+    path: '/documentation',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/documentation/index'),
+        name: 'Documentation',
+        meta: { title: 'documentation', icon: 'documentation', affix: false } // 不固定(有×)
+      }
+    ]
   }
 ]
 
@@ -72,7 +84,7 @@ export const asyncRoutes = [
 ]
 
 const createRouter = () => new Router({
-  mode: 'history', // require service support
+  // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })
