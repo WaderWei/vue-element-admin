@@ -1,6 +1,8 @@
 export default {
   route: {
     dashboard: 'Dashboard',
+    sysManage: 'System',
+    deptUser: 'User Management',
     introduction: 'Introduction',
     documentation: 'Documentation',
     guide: 'Guide',
