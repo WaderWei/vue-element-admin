@@ -81,6 +81,28 @@ export const constantRoutes = [
  * the routes that need to be dynamically loaded based on user roles
 */
 export const asyncRoutes = [
+  {
+    path: '/rbac',
+    component: Layout,
+    redirect: '/rabc/deptuser',
+    alwaysShow: true,
+    meta: {
+      title: 'sysManage',
+      icon: 'sys',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'deptuser',
+        component: () => import('@/views/rbac/deptuser'),
+        name: 'deptUser',
+        meta: {
+          title: 'deptUser',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  }
 ]
 
 const createRouter = () => new Router({
