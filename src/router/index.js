@@ -82,9 +82,9 @@ export const constantRoutes = [
 */
 export const asyncRoutes = [
   {
-    path: '/rbac',
+    path: '/system',
     component: Layout,
-    redirect: '/rabc/deptuser',
+    redirect: '/system/DepartManage',
     alwaysShow: true,
     meta: {
       title: 'sysManage',
@@ -93,11 +93,11 @@ export const asyncRoutes = [
     },
     children: [
       {
-        path: 'deptuser',
-        component: () => import('@/views/rbac/deptuser'),
-        name: 'deptUser',
+        path: 'DepartManage',
+        component: () => import('@/views/system/departmanage'),
+        name: 'DepartManage',
         meta: {
-          title: 'deptUser',
+          title: 'dept',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       }

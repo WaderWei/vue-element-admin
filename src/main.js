@@ -4,6 +4,8 @@ import Cookies from 'js-cookie'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
 
+import Vue2OrgTree from 'vue2-org-tree'
+
 import Element from 'element-ui'
 import './styles/element-variables.scss'
 
@@ -30,6 +32,7 @@ Vue.use(Element, {
   i18n: (key, value) => i18n.t(key, value)
 })
 
+Vue.use(Vue2OrgTree)
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])

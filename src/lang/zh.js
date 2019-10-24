@@ -2,7 +2,7 @@ export default {
   route: {
     dashboard: '首页',
     sysManage: '系统',
-    deptUser: '用户管理',
+    dept: '部门管理',
     introduction: '简述',
     documentation: '文档',
     permission: '权限测试页',

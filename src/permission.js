@@ -15,7 +15,6 @@ router.beforeEach(async(to, from, next) => {
 
   // determine whether the user has logged in
   const hasToken = getToken()
-  debugger
   if (hasToken) {
     /* has token*/
     if (store.getters.isLock && to.path !== '/lock') {
