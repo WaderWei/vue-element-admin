@@ -3,6 +3,7 @@ export default {
     dashboard: '首页',
     sysManage: '系统',
     dept: '部门管理',
+    deptStructure: '部门结构',
     introduction: '简述',
     documentation: '文档',
     permission: '权限测试页',
@@ -65,6 +66,9 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: '国际化',
     externalLink: '外链'
+  },
+  system: {
+    deptStructure: '部门结构'
   },
   navbar: {
     logOut: '退出登录',

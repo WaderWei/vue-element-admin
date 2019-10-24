@@ -3,6 +3,7 @@ export default {
     dashboard: 'Dashboard',
     sysManage: 'System',
     dept: 'Department Management',
+    deptStructure: 'Department Structure',
     introduction: 'Introduction',
     documentation: 'Documentation',
     guide: 'Guide',
@@ -66,6 +67,9 @@ export default {
     clipboardDemo: 'Clipboard',
     i18n: 'I18n',
     externalLink: 'External Link'
+  },
+  system: {
+    deptStructure: 'Department Structure'
   },
   navbar: {
     logOut: 'Log Out',

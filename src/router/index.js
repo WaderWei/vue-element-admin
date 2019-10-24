@@ -84,7 +84,7 @@ export const asyncRoutes = [
   {
     path: '/system',
     component: Layout,
-    redirect: '/system/DepartManage',
+    redirect: '/system/DepartmentStructure',
     alwaysShow: true,
     meta: {
       title: 'sysManage',
@@ -98,6 +98,15 @@ export const asyncRoutes = [
         name: 'DepartManage',
         meta: {
           title: 'dept',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'DepartmentStructure',
+        component: () => import('@/views/system/departmentstructure'),
+        name: 'deptStructure',
+        meta: {
+          title: 'deptStructure',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       }
