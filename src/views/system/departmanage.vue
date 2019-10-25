@@ -1,175 +1,173 @@
 <template>
-  <el-container>
-    <el-header>Header</el-header>
-    <el-container>
-      <el-aside>
-        <div class="custom-tree-container">
-          <div class="block">
-            <el-tree
-              :data="data"
-              show-checkbox
-              node-key="id"
-              default-expand-all
-              :expand-on-click-node="false"
-            >
-              <span slot-scope="{ node, data }" class="custom-tree-node">
-                <span>{{ node.label }}</span>
-                <span>
-                  <el-button type="text" size="mini" @click="() => append(data)">
-                    Append
-                  </el-button>
-                  <el-button type="text" size="mini" @click="() => remove(node, data)">
-                    Delete
-                  </el-button>
-                </span>
-              </span>
-            </el-tree>
+  <div>
+    <el-row>
+      <el-col :span="24">
+        <div style="text-align: center"><h1>部门与用户</h1></div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="40" style="margin: 10px 0">
+      <el-col :lg="8" :xs="24" :span="8" style="margin: 10px 0">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="font-size: larger">部门管理</span>
+            <el-button style="float: right;" type="primary" plain>添加一级部门</el-button>
           </div>
-        </div>
-      </el-aside>
-      <el-main>
-        <el-table
-          :data="tableData"
-        >
-          <el-table-column
-            fixed
-            prop="date"
-            label="日期"
-          />
-          <el-table-column
-            prop="name"
-            label="姓名"
-          />
-          <el-table-column
-            prop="province"
-            label="省份"
-          />
-          <el-table-column
-            prop="city"
-            label="市区"
-          />
-          <el-table-column
-            prop="address"
-            label="地址"
-          />
-          <el-table-column
-            prop="zip"
-            label="邮编"
-          />
-          <el-table-column
-            fixed="right"
-            label="操作"
-          >
-            <template slot-scope="scope">
-              <el-button
-                type="text"
-                size="small"
-                @click.native.prevent="deleteRow(scope.$index, tableData)"
+          <el-row>
+            <el-input
+              v-model="filterText"
+              placeholder="输入要搜索的部门"
+            />
+          </el-row>
+          <el-row style="margin: 10px 0">
+            <div class="custom-tree-container">
+              <div class="block">
+                <el-tree
+                  ref="tree"
+                  class="filter-tree"
+                  :data="data"
+                  node-key="id"
+                  default-expand-all
+                  :expand-on-click-node="false"
+                  :filter-node-method="filterNode"
+                >
+                  <span slot-scope="{ node, data }" class="custom-tree-node">
+                    <span>{{ node.label }}</span>
+                    <span>
+                      <el-button
+                        type="text"
+                        icon="el-icon-circle-plus-outline"
+                        size="mini"
+                        ic
+                        @click="() => append(data)"
+                      />
+                      <el-button type="text" icon="el-icon-edit" size="mini" @click="() => remove(node, data)" />
+                      <el-button type="text" icon="el-icon-delete" size="mini" @click="() => remove(node, data)" />
+                    </span>
+                  </span>
+                </el-tree>
+              </div>
+            </div>
+          </el-row>
+        </el-card>
+      </el-col>
+      <el-col :lg="16" :xs="24" :span="15" style="margin: 10px 0">
+        <el-card class="box-card">
+          <div slot="header" class="clearfix">
+            <span style="font-size: larger">员工管理</span>
+            <el-button style="float: right;" type="primary" plain>添加员工</el-button>
+          </div>
+          <el-row>
+            <el-input v-model="input3" placeholder="请输入内容" class="input-with-select">
+              <el-select slot="prepend" v-model="select" placeholder="请选择">
+                <el-option label="日期" value="1" />
+                <el-option label="姓名" value="2" />
+                <el-option label="地址" value="3" />
+              </el-select>
+              <el-button slot="append" icon="el-icon-search" class="btn-select" />
+            </el-input>
+          </el-row>
+          <el-row style="margin: 10px 0">
+            <el-table :data="tableData" border>
+              <el-table-column prop="date" label="日期" />
+              <el-table-column prop="name" label="姓名" />
+              <el-table-column prop="address" label="地址" />
+              <el-table-column
+                fixed="right"
+                label="操作"
               >
-                移除
-              </el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-main>
-    </el-container>
-  </el-container>
+                <template slot-scope="scope">
+                  <el-button icon="el-icon-edit" type="text" size="small" @click.native.prevent="deleteRow(scope.$index, tableData)" />
+                  <el-button icon="el-icon-delete" type="text" size="small" @click.native.prevent="deleteRow(scope.$index, tableData)" />
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-row>
+          <el-row type="flex" justify="end">
+            <el-pagination
+              background
+              :page-size="10"
+              layout="prev, pager, next"
+              :total="100"
+            />
+          </el-row>
+        </el-card>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 <script>
 let id = 1000
 export default {
   name: 'DepartManage',
   data() {
-    const data = [{
-      id: 1,
-      label: '一级 1',
-      children: [{
-        id: 4,
-        label: '二级 1-1',
+    const data = [
+      {
+        id: 1,
+        label: '软件部',
         children: [{
-          id: 9,
-          label: '三级 1-1-1'
+          id: 4,
+          label: '软件部1',
+          children: [{
+            id: 9,
+            label: '软件部2'
+          }, {
+            id: 10,
+            label: '软件部3'
+          }]
+        }]
+      },
+      {
+        id: 2,
+        label: '销售部',
+        children: [{
+          id: 5,
+          label: '销售部1'
         }, {
-          id: 10,
-          label: '三级 1-1-2'
+          id: 6,
+          label: '销售部2'
+        }]
+      },
+      {
+        id: 3,
+        label: '生产部',
+        children: [{
+          id: 7,
+          label: '生产部1'
+        },
+        {
+          id: 8,
+          label: '生产部2'
         }]
       }]
-    }, {
-      id: 2,
-      label: '一级 2',
-      children: [{
-        id: 5,
-        label: '二级 2-1'
-      }, {
-        id: 6,
-        label: '二级 2-2'
-      }]
-    }, {
-      id: 3,
-      label: '一级 3',
-      children: [{
-        id: 7,
-        label: '二级 3-1'
-      }, {
-        id: 8,
-        label: '二级 3-2'
-      }]
-    }]
     return {
       data: JSON.parse(JSON.stringify(data)),
       tableData: [{
-        date: '2016-05-03',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
         date: '2016-05-02',
         name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
+        address: '上海市'
       }, {
         date: '2016-05-04',
         name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
+        address: '上海市'
       }, {
         date: '2016-05-01',
         name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
+        address: '上海市'
       }, {
-        date: '2016-05-08',
+        date: '2016-05-03',
         name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-06',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }, {
-        date: '2016-05-07',
-        name: '王小虎',
-        province: '上海',
-        city: '普陀区',
-        address: '上海市普陀区金沙江路 1518 弄',
-        zip: 200333
-      }]
+        address: '上海市'
+      }],
+      filterText: '',
+      input3: '',
+      select: ''
     }
   },
-
+  watch: {
+    filterText(val) {
+      this.$refs.tree.filter(val)
+    }
+  },
   methods: {
     append(data) {
       const newChild = { id: id++, label: 'testtest', children: [] }
@@ -187,6 +185,10 @@ export default {
     },
     deleteRow(index, rows) {
       rows.splice(index, 1)
+    },
+    filterNode(value, data) {
+      if (!value) return true
+      return data.label.indexOf(value) !== -1
     }
   }
 }
@@ -200,34 +202,5 @@ export default {
     justify-content: space-between;
     font-size: 14px;
     padding-right: 8px;
-  }
-
-  .el-header, .el-footer {
-    background-color: #B3C0D1;
-    color: #333;
-  }
-
-  .el-aside {
-    background-color: #D3DCE6;
-    color: #333;
-    max-height: 750px;
-    margin: 3px;
-  }
-
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-  }
-
-  body > .el-container {
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-  }
-
-  .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-  }
-
-  .el-container:nth-child(7) .el-aside {
   }
 </style>
