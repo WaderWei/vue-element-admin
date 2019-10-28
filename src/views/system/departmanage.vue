@@ -24,11 +24,12 @@
                 <el-tree
                   ref="tree"
                   class="filter-tree"
-                  :data="data"
+                  :data="deptData"
                   node-key="id"
                   default-expand-all
                   :expand-on-click-node="false"
                   :filter-node-method="filterNode"
+                  :props="{label: 'name'}"
                 >
                   <span slot-scope="{ node, data }" class="custom-tree-node">
                     <span>{{ node.label }}</span>
@@ -97,50 +98,13 @@
 </template>
 <script>
 let id = 1000
+import { findAll } from '@/api/dept'
+
 export default {
   name: 'DepartManage',
   data() {
-    const data = [
-      {
-        id: 1,
-        label: '软件部',
-        children: [{
-          id: 4,
-          label: '软件部1',
-          children: [{
-            id: 9,
-            label: '软件部2'
-          }, {
-            id: 10,
-            label: '软件部3'
-          }]
-        }]
-      },
-      {
-        id: 2,
-        label: '销售部',
-        children: [{
-          id: 5,
-          label: '销售部1'
-        }, {
-          id: 6,
-          label: '销售部2'
-        }]
-      },
-      {
-        id: 3,
-        label: '生产部',
-        children: [{
-          id: 7,
-          label: '生产部1'
-        },
-        {
-          id: 8,
-          label: '生产部2'
-        }]
-      }]
     return {
-      data: JSON.parse(JSON.stringify(data)),
+      deptData: [],
       tableData: [{
         date: '2016-05-02',
         name: '王小虎',
@@ -168,7 +132,18 @@ export default {
       this.$refs.tree.filter(val)
     }
   },
+  created() {
+    this.fetchDeptData()
+  },
   methods: {
+    fetchDeptData() {
+      findAll().then(req => {
+        debugger
+        this.deptData = req.data
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     append(data) {
       const newChild = { id: id++, label: 'testtest', children: [] }
       if (!data.children) {
