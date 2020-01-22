@@ -4,6 +4,8 @@ export default {
     sysManage: 'System',
     dept: 'Department Management',
     deptStructure: 'Department Structure',
+    tool: 'Tool Management',
+    trainSystem: 'Train System',
     introduction: 'Introduction',
     documentation: 'Documentation',
     guide: 'Guide',

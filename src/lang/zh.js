@@ -4,6 +4,8 @@ export default {
     sysManage: '系统',
     dept: '部门管理',
     deptStructure: '部门结构',
+    tool: '工具管理',
+    trainSystem: '培训系统',
     introduction: '简述',
     documentation: '文档',
     permission: '权限测试页',

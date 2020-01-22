@@ -138,7 +138,6 @@ export default {
   methods: {
     fetchDeptData() {
       findAll().then(req => {
-        debugger
         this.deptData = req.data
       }).catch(error => {
         console.log(error)

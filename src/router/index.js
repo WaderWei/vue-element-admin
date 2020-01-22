@@ -61,8 +61,8 @@ export const constantRoutes = [
         meta: { title: 'dashboard', icon: 'dashboard', noCache: true, affix: true }
       }
     ]
-  },
-  {
+  }
+  /* {
     path: '/documentation',
     component: Layout,
     children: [
@@ -73,7 +73,7 @@ export const constantRoutes = [
         meta: { title: 'documentation', icon: 'documentation', affix: false } // 不固定(有×)
       }
     ]
-  }
+  }*/
 ]
 
 /**
@@ -107,6 +107,28 @@ export const asyncRoutes = [
         name: 'deptStructure',
         meta: {
           title: 'deptStructure',
+          roles: ['admin'] // or you can only set roles in sub nav
+        }
+      }
+    ]
+  },
+  {
+    path: '/tool',
+    component: Layout,
+    redirect: '/tool/TrainSystem',
+    alwaysShow: true,
+    meta: {
+      title: 'tool',
+      icon: 'drag',
+      roles: ['admin', 'editor'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'TrainSystem',
+        component: () => import('@/views/tool/TrainSystem'),
+        name: 'TrainSystem',
+        meta: {
+          title: 'trainSystem',
           roles: ['admin'] // or you can only set roles in sub nav
         }
       }
